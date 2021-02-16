@@ -32,13 +32,13 @@ class OpenLCD:
 			command += bytes(cb)
 		self.send(command)
 	
- 	def contrast(self,value):
- 		command = b"|"+bytes((24,value & 0xFF))
- 		self.send(command)
- 	
- 	def move(self,x,y):
- 		pos = 128 + min(16,max(0,x))
- 		if y > 1:
- 			pos += 64
- 		command = bytes([254,pos])
- 		self.send(command)
+	def contrast(self,value):
+		command = b"|"+bytes((24,value & 0xFF))
+		self.send(command)
+	
+	def move(self,x,y):
+		pos = 128 + min(16,max(0,x))
+		if y > 1:
+			pos += 64
+		command = bytes([254,pos])
+		self.send(command)
