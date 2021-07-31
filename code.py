@@ -24,14 +24,14 @@ lcd.clear()
 lcd.write("Hello World !")
 
 for x in range(0,256,8):
-	lcd.backlight(wheel(x))
+	lcd.backlight = wheel(x)
 	time.sleep(0.04)
 
-lcd.backlight(0xFFFF00)
+lcd.backlight = 0xFFFF00
 
-#lcd.contrast(128)
+#lcd.contrast = 128
 #time.sleep(1)
-#lcd.contrast(0)
+#lcd.contrast = 0
 #time.sleep(1)
 
 for x in range(0,13):
