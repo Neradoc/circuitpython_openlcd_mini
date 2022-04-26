@@ -1,11 +1,41 @@
-# DISPLAY_ADDRESS1 = 0x72
+# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
+# SPDX-FileCopyrightText: Copyright (c) 2022 Neradoc
+#
+# SPDX-License-Identifier: MIT
+"""
+`openlcd_mini`
+================================================================================
 
-# Wire.write('|'); //Put LCD into setting mode
-# Wire.write('-'); //Send clear display command
+Small driver for Sparkfun OpenLCD/SerLCD for Circuitpython
 
+
+* Author(s): Neradoc
+
+Implementation Notes
+--------------------
+
+**Hardware:**
+
+* `SparkFun 16x2 SerLCD - RGB Backlight (Qwiic) <https://www.sparkfun.com/products/16396>`_
+* `SparkFun 20x4 SerLCD - RGB Backlight (Qwiic) <https://www.sparkfun.com/products/16398>`_
+
+**Software and Dependencies:**
+
+* Adafruit CircuitPython firmware for the supported boards:
+  https://circuitpython.org/downloads
+
+# * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
+"""
+
+from micropython import const
+
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/Neradoc/CircuitPython_openlcd_mini.git"
+
+_DEFAULT_ADDRESS = const(0x72)
 
 class OpenLCD:
-    def __init__(self, i2c, address):
+    def __init__(self, i2c, address=_DEFAULT_ADDRESS):
         self.address = address
         self.i2c = i2c
         self._color = (255,255,255)
