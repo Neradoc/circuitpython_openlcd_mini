@@ -64,6 +64,7 @@ Usage Example
 =============
 
 .. code-block:: python
+
     import time
     import board
     import openlcd_mini

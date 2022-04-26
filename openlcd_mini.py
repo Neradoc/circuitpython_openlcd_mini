@@ -24,7 +24,7 @@ Implementation Notes
 * Adafruit CircuitPython firmware for the supported boards:
   https://circuitpython.org/downloads
 
-# * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
+* Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
 from micropython import const
@@ -35,6 +35,12 @@ __repo__ = "https://github.com/Neradoc/CircuitPython_openlcd_mini.git"
 _DEFAULT_ADDRESS = const(0x72)
 
 class OpenLCD:
+    """
+    Driver for the Saprkfun OpenLCD firmware.
+
+    :param i2c_bus: The `busio.I2C` object to use.
+    :param int address: Device I2C address.
+    """
     def __init__(self, i2c, address=_DEFAULT_ADDRESS):
         self.address = address
         self.i2c = i2c
@@ -43,26 +49,45 @@ class OpenLCD:
         self.clear()
 
     def clear(self):
+        """Clear the display."""
         while not self.i2c.try_lock():
             self.i2c.unlock()
         self.i2c.writeto(self.address, b"|-")
         self.i2c.unlock()
 
     def send(self, value):
+        """
+        Send raw data to the LCD.
+
+        :param bytes value: Bytes to send to the LCD.
+        """
         while not self.i2c.try_lock():
             self.i2c.unlock()
         self.i2c.writeto(self.address, value)
         self.i2c.unlock()
 
     def write(self, value):
+        """
+        Write text to the LCD from the current cursor position.
+
+        :param chr value: Text to write to the LCD.
+        """
         out = b"{}".format(value.replace("|","||"))
         self.send(out)
 
     def print(self, *values, end="\r", sep=" "):
+        """
+        Write text to the LCD from the current cursor position, like python's print.
+
+        :param chr values: Values to write to the LCD.
+        :param chr end: Final character added to the line. Default: carrier return.
+        :param chr sep: Separator between the values, default: space.
+        """
         self.write(sep.join([str(x) for x in values])+end)
 
     @property
     def backlight(self):
+        """The color of the backlight, tuple (r, g, b) or int #RRGGBB."""
         return self._color
 
     @backlight.setter
@@ -81,6 +106,7 @@ class OpenLCD:
 
     @property
     def contrast(self):
+        """The contrast, an int between 0 and 128."""
         return self._contrast
 
     @contrast.setter
@@ -92,6 +118,7 @@ class OpenLCD:
         self.send(command)
 
     def move(self, x, y):
+        """Move the cursor to the designated position."""
         pos = 128 + min(16, max(0, x))
         if y > 1:
             pos += 64
