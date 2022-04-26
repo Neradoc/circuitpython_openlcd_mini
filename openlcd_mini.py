@@ -10,6 +10,7 @@ class OpenLCD:
         self.i2c = i2c
         self._color = (255,255,255)
         self._contrast = 0
+        self.clear()
 
     def clear(self):
         while not self.i2c.try_lock():
