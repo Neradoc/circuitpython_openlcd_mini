@@ -1,7 +1,8 @@
 # SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
 # SPDX-FileCopyrightText: Copyright (c) 2022 Neradoc
-#
 # SPDX-License-Identifier: MIT
+#
+# pylint:disable=consider-using-f-string
 """
 `openlcd_mini`
 ================================================================================
@@ -34,6 +35,7 @@ __repo__ = "https://github.com/Neradoc/CircuitPython_openlcd_mini.git"
 
 _DEFAULT_ADDRESS = const(0x72)
 
+
 class OpenLCD:
     """
     Driver for the Saprkfun OpenLCD firmware.
@@ -41,10 +43,11 @@ class OpenLCD:
     :param i2c_bus: The `busio.I2C` object to use.
     :param int address: Device I2C address.
     """
+
     def __init__(self, i2c, address=_DEFAULT_ADDRESS):
         self.address = address
         self.i2c = i2c
-        self._color = (255,255,255)
+        self._color = (255, 255, 255)
         self._contrast = 0
         self.clear()
 
@@ -72,7 +75,7 @@ class OpenLCD:
 
         :param chr value: Text to write to the LCD.
         """
-        out = b"{}".format(value.replace("|","||"))
+        out = "{}".format(value.replace("|", "||")).encode("ascii")
         self.send(out)
 
     def print(self, *values, end="\r", sep=" "):
@@ -83,7 +86,7 @@ class OpenLCD:
         :param chr end: Final character added to the line. Default: carrier return.
         :param chr sep: Separator between the values, default: space.
         """
-        self.write(sep.join([str(x) for x in values])+end)
+        self.write(sep.join([str(x) for x in values]) + end)
 
     @property
     def backlight(self):
@@ -93,13 +96,13 @@ class OpenLCD:
     @backlight.setter
     def backlight(self, color):
         command = b"|+"
-        if (type(color) == tuple or type(color) == list) and len(color) == 3:
+        if isinstance(color, (tuple, list)) and len(color) == 3:
             command += bytes(color)
             self._color = tuple(color)
-        elif type(color) == int:
-            cb = (color // 0x10000 & 0xFF, color // 0x100 & 0xFF, color & 0xFF)
-            command += bytes(cb)
-            self._color = cb
+        elif isinstance(color, int):
+            color_tuple = (color // 0x10000 & 0xFF, color // 0x100 & 0xFF, color & 0xFF)
+            command += bytes(color_tuple)
+            self._color = color_tuple
         else:
             raise ValueError("color format: (r,g,b) or 0xRRGGBB")
         self.send(command)
